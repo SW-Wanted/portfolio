@@ -84,7 +84,7 @@ export default function PS5Interface() {
                 <img src="sw_wanted.png" alt="User" className="w-full h-full object-cover" />
               </div>
               <h1 className="text-3xl font-light tracking-[0.3em]">SW Wanted</h1>
-              <div className="flex items-center gap-2 text-zinc-500 animate-pulse">
+              <div className="flex items-center gap-2 text-zinc-400 animate-pulse">
                 <PSButton shape="X" size="w-5 h-5" />
                 <span className="text-[10px] uppercase tracking-widest font-bold text-white">Entrar</span>
               </div>
@@ -96,7 +96,7 @@ export default function PS5Interface() {
             <header className="flex items-center justify-between px-16 py-8">
               <nav className="flex items-center gap-10">
                 <span className="text-sm font-bold tracking-[0.2em] border-b-2 border-white pb-1">JOGOS</span>
-                <span className="text-sm font-bold tracking-[0.2em] text-zinc-500">MÍDIA</span>
+                <span className="text-sm font-bold tracking-[0.2em] text-zinc-400">MÍDIA</span>
               </nav>
               <div className="flex items-center gap-8 text-zinc-400">
                 <Search className="w-5 h-5" /> <Settings className="w-5 h-5" />
@@ -185,9 +185,16 @@ function PSButton({ shape, size = "w-6 h-6" }: { shape: string, size?: string })
 
 function NavHint({ shape, label, onClick }: { shape: string, label: string, onClick?: () => void }) {
   return (
-    <div className="flex items-center gap-3 cursor-pointer group" onClick={onClick}>
+    <div 
+      role="button"
+      aria-label={`${label} (Botão ${shape} no controle)`}
+      className="flex items-center gap-3 cursor-pointer group" 
+      onClick={onClick}
+    >
       <PSButton shape={shape} size="w-8 h-8" />
-      <span className="text-xs font-bold tracking-widest uppercase text-zinc-400 group-hover:text-white transition-colors">{label}</span>
+      <span className="text-xs font-bold tracking-widest uppercase text-zinc-300 group-hover:text-white transition-colors">
+        {label}
+      </span>
     </div>
   );
 }
