@@ -1,9 +1,40 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Settings, Disc, Globe, Github, ChevronLeft, Info } from 'lucide-react';
+import { Search, Settings, Disc, Globe, Github, Gamepad2, Info } from 'lucide-react';
 
-// Dados atualizados com detalhes extras
+// 1. CONFIGURAÇÃO DE TEMAS COM ADAPTAÇÃO DE COR DE TEXTO
+const THEMES = {
+  default: { 
+    id: 'default', 
+    accent: '#0072ce', 
+    bg: 'radial-gradient(circle at 50% 50%, #1a1a2e 0%, #000000 100%)',
+    text: '#ffffff',
+    muted: '#94a3b8' 
+  },
+  spiderman: { 
+    id: 'spiderman', 
+    accent: '#ff0000', 
+    bg: 'radial-gradient(circle at 50% 50%, #4a0000 0%, #050000 100%)',
+    text: '#ffffff',
+    muted: '#f87171'
+  },
+  godofwar: { 
+    id: 'godofwar', 
+    accent: '#d4af37', 
+    bg: 'radial-gradient(circle at 50% 50%, #2a221b 0%, #050505 100%)',
+    text: '#ffffff',
+    muted: '#a8a29e'
+  },
+  classic: { 
+    id: 'classic', 
+    accent: '#0072ce', 
+    bg: 'radial-gradient(circle at 50% 50%, #ffffff 0%, #cbd5e1 100%)',
+    text: '#0f172a', // Escuro para fundo claro (Classic)
+    muted: '#64748b'
+  },
+};
+
 const PROJECTS = [
   { 
     id: 1, 
@@ -11,10 +42,9 @@ const PROJECTS = [
     category: "Portfolio Engine", 
     img: "https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=800", 
     bg: "https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?q=80&w=2000", 
-    description: "Um motor de portfólio de alta performance construído com Next.js 14 e Framer Motion. Focado em transições imersivas e UX de console.",
+    description: "Um motor de portfólio de alta performance construído com Next.js 14 e Framer Motion.",
     tags: ["Next.js", "Tailwind", "Framer Motion"],
-    link: "#",
-    github: "#"
+    link: "#", github: "#"
   },
   { 
     id: 2, 
@@ -22,10 +52,9 @@ const PROJECTS = [
     category: "E-Commerce", 
     img: "https://images.unsplash.com/photo-1605898960710-91152a5538e1?w=800", 
     bg: "https://images.unsplash.com/photo-1605898960710-91152a5538e1?q=80&w=2000",
-    description: "Plataforma de e-commerce futurista com integração de pagamentos e renderização no lado do servidor para SEO otimizado.",
+    description: "Plataforma de e-commerce futurista com integração de pagamentos.",
     tags: ["React", "Stripe", "Node.js"],
-    link: "#",
-    github: "#"
+    link: "#", github: "#"
   },
   { 
     id: 3, 
@@ -33,10 +62,9 @@ const PROJECTS = [
     category: "AI Analytics", 
     img: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800", 
     bg: "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2000",
-    description: "Dashboard de análise de dados utilizando inteligência artificial para prever tendências de mercado e comportamento do usuário.",
-    tags: ["Python", "OpenAI", "TensorFlow"],
-    link: "#",
-    github: "#"
+    description: "Dashboard de análise de dados utilizando inteligência artificial.",
+    tags: ["Python", "OpenAI", "Next.js"],
+    link: "#", github: "#"
   },
 ];
 
@@ -45,6 +73,7 @@ export default function PS5Interface() {
   const [focusedId, setFocusedId] = useState(1);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [time, setTime] = useState('');
+  const [currentTheme, setCurrentTheme] = useState(THEMES.default);
 
   useEffect(() => {
     const updateTime = () => setTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
@@ -53,121 +82,164 @@ export default function PS5Interface() {
     return () => clearInterval(timer);
   }, []);
 
+  const cycleTheme = () => {
+    const keys = Object.keys(THEMES);
+    const currentIndex = keys.indexOf(currentTheme.id);
+    const nextIndex = (currentIndex + 1) % keys.length;
+    // @ts-ignore
+    setCurrentTheme(THEMES[keys[nextIndex]]);
+  };
+
   const currentProject = PROJECTS.find(p => p.id === (view === 'detail' ? selectedId : focusedId));
 
   return (
-    <main className="relative h-screen w-screen bg-[#000000] text-white overflow-hidden font-sans">
+    <main 
+      className="relative h-screen w-screen overflow-hidden font-sans transition-all duration-700"
+      style={{ background: currentTheme.bg, color: currentTheme.text }}
+    >
       
-      {/* 1. FUNDO OLED (Resultado 1 da busca) */}
-      <div className="absolute inset-0 z-0 overflow-hidden">
-        <div className="particles absolute inset-0 opacity-20" />
+      {/* 1. FUNDO DINÂMICO */}
+      <div className="absolute inset-0 z-0">
+        <div className="particles absolute inset-0 opacity-10" />
         <AnimatePresence mode="wait">
           <motion.div
             key={currentProject?.id}
-            initial={{ opacity: 0, scale: 1.1 }}
-            animate={{ opacity: 0.3, scale: 1 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.25 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1.2 }}
+            transition={{ duration: 1.5 }}
             className="absolute inset-0 bg-cover bg-center"
             style={{ backgroundImage: `url(${currentProject?.bg})` }}
           />
         </AnimatePresence>
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
+        <div 
+          className="absolute inset-0 transition-opacity duration-1000" 
+          style={{ background: `linear-gradient(to top, ${currentTheme.id === 'classic' ? 'rgba(255,255,255,0.8)' : 'black'}, transparent)` }}
+        />
       </div>
 
       <AnimatePresence mode="wait">
         {view === 'login' ? (
           /* TELA DE LOGIN */
-          <motion.div key="login" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 1.1 }} className="relative z-10 flex h-full flex-col items-center justify-center">
-            <button onClick={() => setView('home')} className="group flex flex-col items-center gap-6">
-              <div className="h-44 w-44 rounded-full border-4 border-transparent bg-zinc-800 transition-all duration-500 group-hover:border-blue-500 group-hover:shadow-[0_0_50px_rgba(0,114,206,0.6)] overflow-hidden">
-                <img src="sw_wanted.png" alt="User" className="w-full h-full object-cover" />
-              </div>
-              <h1 className="text-3xl font-light tracking-[0.3em]">SW Wanted</h1>
-              <div className="flex items-center gap-2 text-zinc-400 animate-pulse">
-                <PSButton shape="X" size="w-5 h-5" />
-                <span className="text-[10px] uppercase tracking-widest font-bold text-white">Entrar</span>
-              </div>
-            </button>
-          </motion.div>
+          /* TELA DE LOGIN (SWITCH USER) */
+<motion.div 
+  key="login" 
+  initial={{ opacity: 0 }} 
+  animate={{ opacity: 1 }} 
+  exit={{ opacity: 0, scale: 1.1 }} 
+  className="relative z-10 flex h-full flex-col items-center justify-center gap-12 text-center px-4"
+>
+  <div>
+    <h1 className="text-5xl font-light tracking-tight mb-3">
+      Bem-vindo de volta ao Portfolio
+    </h1>
+    <p 
+      style={{ color: currentTheme.muted }} 
+      className="text-xl tracking-wide font-light max-w-2xl mx-auto"
+    >
+      Selecione o meu perfil para continuar
+    </p>
+  </div>
+
+  <button 
+    onClick={() => setView('home')} 
+    className="group relative flex flex-col items-center gap-6 focus:outline-none"
+  >
+    {/* Ícone de Controle Flutuante */}
+    <motion.div 
+      animate={{ y: [0, -10, 0] }} 
+      transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }} 
+      className="absolute -top-16"
+    >
+      <Gamepad2 className="w-10 h-10" style={{ color: currentTheme.text }} />
+      <div className="bg-white text-black text-[10px] font-bold px-1.5 rounded-sm absolute -top-1 -right-3 shadow-lg">1</div>
+    </motion.div>
+
+    {/* Avatar Circular */}
+    <div className="h-52 w-52 rounded-full border-[6px] border-transparent group-hover:border-blue-500 transition-all duration-500 overflow-hidden shadow-[0_0_60px_rgba(0,0,0,0.5)] bg-zinc-800">
+      <img 
+        src="/sw_wanted.png" 
+        alt="Perfil SW Wanted" 
+        className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" 
+      />
+    </div>
+
+    <div>
+      <h2 className="text-3xl font-light tracking-[0.3em] uppercase">SW Wanted</h2>
+      <div className="mt-4 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
+        <PSButton shape="X" size="w-6 h-6" theme={currentTheme} />
+        <span className="text-[11px] uppercase tracking-[0.2em] font-bold">Iniciar Portfólio</span>
+      </div>
+    </div>
+  </button>
+</motion.div>
+
         ) : view === 'home' ? (
-          /* TELA HOME (LAYERED DIMENSIONS - Resultado 2) */
-          <motion.div key="home" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }} className="relative z-10 flex h-full flex-col">
+          /* TELA HOME */
+          <motion.div key="home" initial={{ opacity: 0, x: 100 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -100 }} className="relative z-10 flex h-full flex-col">
             <header className="flex items-center justify-between px-16 py-8">
               <nav className="flex items-center gap-10">
-                <span className="text-sm font-bold tracking-[0.2em] border-b-2 border-white pb-1">JOGOS</span>
-                <span className="text-sm font-bold tracking-[0.2em] text-zinc-400">MÍDIA</span>
+                <span className="text-xs font-black tracking-[0.3em] border-b-2 pb-1" style={{ borderColor: currentTheme.text }}>JOGOS</span>
+                <span className="text-xs font-black tracking-[0.3em]" style={{ color: currentTheme.muted }}>MÍDIA</span>
               </nav>
-              <div className="flex items-center gap-8 text-zinc-400">
-                <Search className="w-5 h-5" /> <Settings className="w-5 h-5" />
-                <span className="text-xl font-light text-white">{time}</span>
+              <div className="flex items-center gap-8">
+                <Search className="w-5 h-5 cursor-pointer" /> 
+                <Settings className="w-5 h-5 cursor-pointer hover:rotate-90 transition-transform" onClick={cycleTheme} style={{ color: currentTheme.accent }} />
+                <span className="text-xl font-light">{time}</span>
               </div>
             </header>
 
-            <section className="flex-1 flex flex-col justify-end px-16 pb-20">
+            <section className="flex-1 flex flex-col justify-end px-16 pb-24">
               <motion.div key={focusedId} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-12">
                 <h1 className="text-7xl font-light tracking-tighter mb-2 italic uppercase">{currentProject?.title}</h1>
-                <p className="text-zinc-400 text-lg uppercase tracking-widest">{currentProject?.category}</p>
+                <p style={{ color: currentTheme.muted }} className="text-lg uppercase tracking-widest">{currentProject?.category}</p>
               </motion.div>
 
-              <div className="flex gap-4">
+              <div className="flex gap-4 overflow-visible h-[280px] items-end">
                 {PROJECTS.map((project) => (
                   <motion.div
                     key={project.id}
                     onMouseEnter={() => setFocusedId(project.id)}
                     onClick={() => { setSelectedId(project.id); setView('detail'); }}
-                    whileHover={{ scale: 1.1, y: -10 }}
-                    className={`relative min-w-[150px] h-[150px] rounded-2xl cursor-pointer transition-all duration-300 ${
-                      focusedId === project.id ? 'ring-4 ring-white shadow-2xl z-20' : 'opacity-40'
+                    whileHover={{ scale: 1.05, y: -15 }}
+                    className={`relative w-[180px] aspect-[2/3] rounded-lg overflow-hidden cursor-pointer transition-all duration-300 shadow-xl ${
+                      focusedId === project.id ? 'ring-4 z-20 scale-105' : 'opacity-40'
                     }`}
+                    style={{ ringColor: currentTheme.text }}
                   >
-                    <img src={project.img} className="w-full h-full object-cover rounded-2xl" />
+                    <img src={project.img} className="w-full h-full object-cover" alt={project.title} />
                   </motion.div>
                 ))}
               </div>
             </section>
+
+            <footer className="px-16 py-8 flex items-center gap-10">
+               <NavHint shape="X" label="Selecionar" theme={currentTheme} />
+               <NavHint shape="O" label="Sair" theme={currentTheme} onClick={() => setView('login')} />
+            </footer>
           </motion.div>
         ) : (
-          /* TELA DE DETALHES (GLASSMORPHISM - Resultado 3) */
-          <motion.div 
-            key="detail" 
-            initial={{ opacity: 0, scale: 0.9 }} 
-            animate={{ opacity: 1, scale: 1 }} 
-            exit={{ opacity: 0 }}
-            className="relative z-20 flex h-full items-center justify-center p-10"
-          >
-            {/* Overlay de Vidro (Fundo do Card) */}
-            <div className="absolute inset-0 bg-black/40 backdrop-blur-md" />
+          /* TELA DE DETALHES */
+          <motion.div key="detail" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="relative z-20 flex h-full items-center justify-center p-10">
+            <div className={`absolute inset-0 backdrop-blur-3xl ${currentTheme.id === 'classic' ? 'bg-white/60' : 'bg-black/70'}`} />
             
-            <div className="relative z-30 w-full max-w-5xl grid grid-cols-2 gap-12 items-center">
-              <div>
-                <motion.img 
-                  initial={{ x: -50, opacity: 0 }} animate={{ x: 0, opacity: 1 }}
-                  src={currentProject?.img} className="w-[350px] h-[500px] rounded-3xl object-cover shadow-2xl border border-white/20" 
-                />
+            <div className="relative z-30 w-full max-w-6xl grid grid-cols-5 gap-16 items-center">
+              <div className="col-span-2 flex justify-center">
+                <img src={currentProject?.img} className="w-full max-w-[400px] aspect-[2/3] rounded-xl object-cover shadow-2xl border border-white/10" />
               </div>
-              
-              <div className="flex flex-col gap-6">
-                <h1 className="text-6xl font-black italic tracking-tighter">{currentProject?.title}</h1>
-                <div className="flex gap-3">
-                  {currentProject?.tags.map(tag => (
-                    <span key={tag} className="px-3 py-1 bg-white/10 rounded text-[10px] font-bold tracking-widest uppercase border border-white/10">{tag}</span>
-                  ))}
-                </div>
-                <p className="text-xl text-zinc-300 leading-relaxed font-light">{currentProject?.description}</p>
-                
-                <div className="flex items-center gap-6 mt-6">
-                  <button className="px-12 py-4 bg-white text-black rounded-full font-bold hover:scale-105 transition-transform flex items-center gap-3">
-                    <Globe className="w-5 h-5" /> Jogar / Ver Site
+              <div className="col-span-3 flex flex-col gap-8">
+                <h1 className="text-8xl font-black italic tracking-tighter uppercase">{currentProject?.title}</h1>
+                <p className="text-2xl leading-relaxed font-light" style={{ color: currentTheme.muted }}>{currentProject?.description}</p>
+                <div className="flex items-center gap-6">
+                  <button className="px-14 py-5 rounded-full font-black text-xl hover:scale-105 transition-transform flex items-center gap-4"
+                    style={{ background: currentTheme.id === 'classic' ? '#0f172a' : 'white', color: currentTheme.id === 'classic' ? 'white' : 'black' }}>
+                    <Globe className="w-6 h-6" /> JOGAR AGORA
                   </button>
-                  <button className="p-4 bg-zinc-800 rounded-full hover:bg-zinc-700 transition-colors">
-                    <Github className="w-6 h-6" />
+                  <button className="p-5 rounded-full border border-current hover:bg-zinc-500/10 transition-colors">
+                    <Github className="w-7 h-7" />
                   </button>
                 </div>
-
-                <div className="mt-12">
-                   <NavHint shape="O" label="Voltar para Início" onClick={() => setView('home')} />
-                </div>
+                <NavHint shape="O" label="Voltar" theme={currentTheme} onClick={() => setView('home')} />
               </div>
             </div>
           </motion.div>
@@ -177,24 +249,22 @@ export default function PS5Interface() {
   );
 }
 
-// Componentes do PlayStation
-function PSButton({ shape, size = "w-6 h-6" }: { shape: string, size?: string }) {
-  const colors: Record<string, string> = { "X": "border-blue-400 text-blue-400", "O": "border-red-500 text-red-500" };
-  return <div className={`${size} rounded-full border-2 ${colors[shape]} flex items-center justify-center text-[10px] font-black bg-black`}>{shape}</div>;
+// COMPONENTES AUXILIARES ADAPTÁVEIS
+function PSButton({ shape, size = "w-6 h-6", theme }: { shape: string, size?: string, theme: any }) {
+  const shapes: Record<string, string> = { "X": "border-blue-400 text-blue-400", "O": "border-red-500 text-red-500" };
+  return (
+    <div className={`${size} rounded-full border-2 ${shapes[shape]} flex items-center justify-center text-[10px] font-black`}
+         style={{ backgroundColor: theme.id === 'classic' ? '#f1f5f9' : '#000' }}>
+      {shape}
+    </div>
+  );
 }
 
-function NavHint({ shape, label, onClick }: { shape: string, label: string, onClick?: () => void }) {
+function NavHint({ shape, label, theme, onClick }: { shape: string, label: string, theme: any, onClick?: () => void }) {
   return (
-    <div 
-      role="button"
-      aria-label={`${label} (Botão ${shape} no controle)`}
-      className="flex items-center gap-3 cursor-pointer group" 
-      onClick={onClick}
-    >
-      <PSButton shape={shape} size="w-8 h-8" />
-      <span className="text-xs font-bold tracking-widest uppercase text-zinc-300 group-hover:text-white transition-colors">
-        {label}
-      </span>
+    <div role="button" className="flex items-center gap-3 cursor-pointer group" onClick={onClick}>
+      <PSButton shape={shape} size="w-8 h-8" theme={theme} />
+      <span className="text-sm font-bold tracking-[0.2em] uppercase transition-colors" style={{ color: theme.muted }}>{label}</span>
     </div>
   );
 }
