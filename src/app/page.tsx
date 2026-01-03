@@ -1,70 +1,49 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Settings, Disc, Globe, Github, Gamepad2, Info } from 'lucide-react';
+import { Search, Settings, Disc, Globe, Github, Gamepad2 } from 'lucide-react';
 
-// 1. CONFIGURAÇÃO DE TEMAS COM ADAPTAÇÃO DE COR DE TEXTO
+// 1. CONFIGURAÇÃO DE TEMAS INTELIGENTES
 const THEMES = {
   default: { 
-    id: 'default', 
-    accent: '#0072ce', 
-    bg: 'radial-gradient(circle at 50% 50%, #1a1a2e 0%, #000000 100%)',
-    text: '#ffffff',
-    muted: '#94a3b8' 
+    id: 'default', accent: '#0072ce', muted: '#94a3b8', text: '#ffffff',
+    bg: 'radial-gradient(circle at 50% 50%, #1a1a2e 0%, #000000 100%)' 
   },
   spiderman: { 
-    id: 'spiderman', 
-    accent: '#ff0000', 
-    bg: 'radial-gradient(circle at 50% 50%, #4a0000 0%, #050000 100%)',
-    text: '#ffffff',
-    muted: '#f87171'
+    id: 'spiderman', accent: '#ff0000', muted: '#f87171', text: '#ffffff',
+    bg: 'radial-gradient(circle at 50% 50%, #4a0000 0%, #050000 100%)' 
   },
   godofwar: { 
-    id: 'godofwar', 
-    accent: '#d4af37', 
-    bg: 'radial-gradient(circle at 50% 50%, #2a221b 0%, #050505 100%)',
-    text: '#ffffff',
-    muted: '#a8a29e'
+    id: 'godofwar', accent: '#d4af37', muted: '#a8a29e', text: '#ffffff',
+    bg: 'radial-gradient(circle at 50% 50%, #2a221b 0%, #050505 100%)' 
   },
   classic: { 
-    id: 'classic', 
-    accent: '#0072ce', 
-    bg: 'radial-gradient(circle at 50% 50%, #ffffff 0%, #cbd5e1 100%)',
-    text: '#0f172a', // Escuro para fundo claro (Classic)
-    muted: '#64748b'
+    id: 'classic', accent: '#0072ce', muted: '#64748b', text: '#0f172a',
+    bg: 'radial-gradient(circle at 50% 50%, #ffffff 0%, #cbd5e1 100%)' 
   },
 };
 
 const PROJECTS = [
   { 
-    id: 1, 
-    title: "ASTRO'S PLAYROOM", 
-    category: "Portfolio Engine", 
+    id: 1, title: "ASTRO'S PLAYROOM", category: "Portfolio Engine", 
     img: "https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=800", 
     bg: "https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?q=80&w=2000", 
-    description: "Um motor de portfólio de alta performance construído com Next.js 14 e Framer Motion.",
-    tags: ["Next.js", "Tailwind", "Framer Motion"],
-    link: "#", github: "#"
+    description: "Um motor de portfólio de alta performance focado em transições imersivas.",
+    tags: ["Next.js", "Tailwind", "Framer Motion"], link: "#", github: "#"
   },
   { 
-    id: 2, 
-    title: "CYBERPUNK 2077", 
-    category: "E-Commerce", 
+    id: 2, title: "CYBERPUNK 2077", category: "E-Commerce", 
     img: "https://images.unsplash.com/photo-1605898960710-91152a5538e1?w=800", 
     bg: "https://images.unsplash.com/photo-1605898960710-91152a5538e1?q=80&w=2000",
-    description: "Plataforma de e-commerce futurista com integração de pagamentos.",
-    tags: ["React", "Stripe", "Node.js"],
-    link: "#", github: "#"
+    description: "Plataforma futurista com integração de pagamentos e SEO otimizado.",
+    tags: ["React", "Stripe", "Node.js"], link: "#", github: "#"
   },
   { 
-    id: 3, 
-    title: "HORIZON ZERO", 
-    category: "AI Analytics", 
+    id: 3, title: "HORIZON ZERO", category: "AI Analytics", 
     img: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800", 
     bg: "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2000",
-    description: "Dashboard de análise de dados utilizando inteligência artificial.",
-    tags: ["Python", "OpenAI", "Next.js"],
-    link: "#", github: "#"
+    description: "Dashboard de análise utilizando IA para prever tendências de mercado.",
+    tags: ["Python", "OpenAI", "Next.js"], link: "#", github: "#"
   },
 ];
 
@@ -97,39 +76,25 @@ export default function PS5Interface() {
       className="relative h-screen w-screen overflow-hidden font-sans transition-all duration-700"
       style={{ background: currentTheme.bg, color: currentTheme.text }}
     >
-      
-      {/* 1. FUNDO DINÂMICO */}
       <div className="absolute inset-0 z-0">
         <div className="particles absolute inset-0 opacity-10" />
         <AnimatePresence mode="wait">
           <motion.div
             key={currentProject?.id}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.25 }}
-            exit={{ opacity: 0 }}
+            initial={{ opacity: 0 }} animate={{ opacity: 0.25 }} exit={{ opacity: 0 }}
             transition={{ duration: 1.5 }}
             className="absolute inset-0 bg-cover bg-center"
             style={{ backgroundImage: `url(${currentProject?.bg})` }}
           />
         </AnimatePresence>
-        <div 
-          className="absolute inset-0 transition-opacity duration-1000" 
-          style={{ background: `linear-gradient(to top, ${currentTheme.id === 'classic' ? 'rgba(255,255,255,0.8)' : 'black'}, transparent)` }}
-        />
+        <div className="absolute inset-0" style={{ background: `linear-gradient(to top, ${currentTheme.id === 'classic' ? 'rgba(255,255,255,0.7)' : 'black'}, transparent)` }} />
       </div>
 
       <AnimatePresence mode="wait">
         {view === 'login' ? (
-          /* TELA DE LOGIN */
-          /* TELA DE LOGIN (SWITCH USER) */
-<motion.div 
-  key="login" 
-  initial={{ opacity: 0 }} 
-  animate={{ opacity: 1 }} 
-  exit={{ opacity: 0, scale: 1.1 }} 
-  className="relative z-10 flex h-full flex-col items-center justify-center gap-12 text-center px-4"
->
-  <div>
+          /* TELA DE LOGIN COM TEXTO CRIATIVO */
+          <motion.div key="login" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 1.1 }} className="relative z-10 flex h-full flex-col items-center justify-center gap-12 text-center px-4">
+            <div>
     <h1 className="text-5xl font-light tracking-tight mb-3">
       Bem-vindo de volta ao Portfolio
     </h1>
@@ -139,41 +104,27 @@ export default function PS5Interface() {
     >
       Selecione o meu perfil para continuar
     </p>
-  </div>
+            </div>
 
-  <button 
-    onClick={() => setView('home')} 
-    className="group relative flex flex-col items-center gap-6 focus:outline-none"
-  >
-    {/* Ícone de Controle Flutuante */}
-    <motion.div 
-      animate={{ y: [0, -10, 0] }} 
-      transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }} 
-      className="absolute -top-16"
-    >
-      <Gamepad2 className="w-10 h-10" style={{ color: currentTheme.text }} />
-      <div className="bg-white text-black text-[10px] font-bold px-1.5 rounded-sm absolute -top-1 -right-3 shadow-lg">1</div>
-    </motion.div>
+            <button onClick={() => setView('home')} className="group relative flex flex-col items-center gap-6 focus:outline-none">
+              <motion.div animate={{ y: [0, -10, 0] }} transition={{ repeat: Infinity, duration: 2 }} className="absolute -top-16">
+                <Gamepad2 className="w-10 h-10" style={{ color: currentTheme.text }} />
+                <div className="bg-white text-black text-[10px] font-bold px-1.5 rounded-sm absolute -top-1 -right-3 shadow-lg">1</div>
+              </motion.div>
 
-    {/* Avatar Circular */}
-    <div className="h-52 w-52 rounded-full border-[6px] border-transparent group-hover:border-blue-500 transition-all duration-500 overflow-hidden shadow-[0_0_60px_rgba(0,0,0,0.5)] bg-zinc-800">
-      <img 
-        src="/sw_wanted.png" 
-        alt="Perfil SW Wanted" 
-        className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" 
-      />
-    </div>
+              <div className="h-52 w-52 rounded-full border-[6px] border-transparent group-hover:border-blue-500 transition-all duration-500 overflow-hidden shadow-2xl bg-zinc-800">
+                <img src="/sw_wanted.png" alt="User" className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" />
+              </div>
 
-    <div>
-      <h2 className="text-3xl font-light tracking-[0.3em] uppercase">SW Wanted</h2>
-      <div className="mt-4 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
-        <PSButton shape="X" size="w-6 h-6" theme={currentTheme} />
-        <span className="text-[11px] uppercase tracking-[0.2em] font-bold">Iniciar Portfólio</span>
-      </div>
-    </div>
-  </button>
-</motion.div>
-
+              <div>
+                <h2 className="text-3xl font-light tracking-[0.3em] uppercase">SW Wanted</h2>
+                <div className="mt-4 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                  <PSButton shape="X" size="w-6 h-6" theme={currentTheme} />
+                  <span className="text-[11px] uppercase tracking-[0.2em] font-bold">Iniciar Portfólio</span>
+                </div>
+              </div>
+            </button>
+          </motion.div>
         ) : view === 'home' ? (
           /* TELA HOME */
           <motion.div key="home" initial={{ opacity: 0, x: 100 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -100 }} className="relative z-10 flex h-full flex-col">
@@ -202,10 +153,10 @@ export default function PS5Interface() {
                     onMouseEnter={() => setFocusedId(project.id)}
                     onClick={() => { setSelectedId(project.id); setView('detail'); }}
                     whileHover={{ scale: 1.05, y: -15 }}
-                    className={`relative w-[180px] aspect-[2/3] rounded-lg overflow-hidden cursor-pointer transition-all duration-300 shadow-xl ${
-                      focusedId === project.id ? 'ring-4 z-20 scale-105' : 'opacity-40'
+                    className={`relative w-[180px] aspect-[2/3] rounded-lg overflow-hidden cursor-pointer transition-all duration-300 shadow-xl border-4 ${
+                      focusedId === project.id ? 'z-20 scale-105' : 'opacity-40 border-transparent'
                     }`}
-                    style={{ ringColor: currentTheme.text }}
+                    style={{ borderColor: focusedId === project.id ? currentTheme.text : 'transparent' }}
                   >
                     <img src={project.img} className="w-full h-full object-cover" alt={project.title} />
                   </motion.div>
@@ -222,7 +173,6 @@ export default function PS5Interface() {
           /* TELA DE DETALHES */
           <motion.div key="detail" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="relative z-20 flex h-full items-center justify-center p-10">
             <div className={`absolute inset-0 backdrop-blur-3xl ${currentTheme.id === 'classic' ? 'bg-white/60' : 'bg-black/70'}`} />
-            
             <div className="relative z-30 w-full max-w-6xl grid grid-cols-5 gap-16 items-center">
               <div className="col-span-2 flex justify-center">
                 <img src={currentProject?.img} className="w-full max-w-[400px] aspect-[2/3] rounded-xl object-cover shadow-2xl border border-white/10" />
